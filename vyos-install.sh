@@ -36,4 +36,10 @@ virt-install \
 # vyos@vyos:~$ reboot
 
 # To reboo the guest, in host:
-# virsh reboot <domain-name> 
+# virsh reboot <domain-name>
+
+# To login text console:
+# virsh console <domain-name>
+
+# I'll do the SSH thing later
+
