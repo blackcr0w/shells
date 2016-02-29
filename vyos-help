@@ -1,0 +1,52 @@
+show
+Possible completions:
+  arp           Show Address Resolution Protocol (ARP) information
+  bridge        Show bridging information
+  cluster       Show clustering information
+  configuration Show running configuration
+  conntrack     Show conntrack entries in the conntrack table 
+  conntrack-sync
+                Show connection syncing information
+  date          Show system date and time
+  dhcp          Show Dynamic Host Configuration Protocol (DHCP) information
+  dhcpv6        Show status related to DHCPv6
+  disk          Show status of disk device
+  dns           Show Domain Name Server (DNS) information
+  file          Show files for a particular image
+  firewall      Show firewall information
+  flow-accounting
+                Show flow accounting statistics
+  hardware      Show system hardware details
+  history       show command history
+  host          Show host information
+  incoming      Show ethernet input-policy information
+  interfaces    Show network interface information
+  ip            Show IPv4 routing information
+  ipv6          Show IPv6 routing information
+  license       Show VyOS license information
+  lldp          Show lldp
+  log           Show contents of current master log file
+  login         Show current login credentials
+  monitoring    Show currently monitored services
+  nat           Show Network Address Translation (NAT) information
+  nhrp          Show NHRP info
+  ntp           Show peer status of network time daemon
+  openvpn       Show OpenVPN information
+  policy        Show policy information
+  poweroff      Show scheduled poweroff
+  queueing      Show ethernet queueing information
+  raid          Show status of RAID set
+  reboot        Show scheduled reboot
+  route-map     Show route-map information
+  snmp          Show status of SNMP on localhost
+  system        Show system information
+  table         Show routing table
+  tech-support  Show consolidated tech-support report
+  users         Show user information
+  version       Show Vyatta version information
+  vpn           Show Virtual Private Network (VPN) information
+  vrrp          Show Virtual Router Redundancy Protocol (VRRP) information
+  wan-load-balance
+                Show Wide Area Network (WAN) load-balancing information
+  webproxy      Show webproxy information
+  zone-policy   Show summary of zone policy for a specific zone

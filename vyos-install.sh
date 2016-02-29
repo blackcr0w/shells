@@ -1,8 +1,9 @@
 #!/bin/bash
+sudo apt-get update
 
 apt-get install aptitude
 
-aptitude install qemu-kvm libvirt-bin
+aptitude install qemu-kvm libvirt-bin qemu-img
 
 adduser <user id> kvm
 
@@ -30,6 +31,7 @@ virt-install \
 --cdrom ./vyos-1.1.7-amd64.iso \
 --accelerate
 
+
 # Then, the VyOS installation console will pop out automatically,
 # <user:password> = <vyos:vyos>
 # vyos@vyos:~$ install image 
@@ -42,4 +44,31 @@ virt-install \
 # virsh console <domain-name>
 
 # I'll do the SSH thing later
+
+# install deb file:
+# wget https://releases.hashicorp.com/vagrant/1.7.4/vagrant_1.7.4_x86_64.deb
+
+# dpkg -i vagrant_1.7.4_x86_64.deb
+
+# apt-get install -f
+
+# apt-get remove <packet>
+
+
+sudo apt-get install vagrant
+sudo apt-get -y install libxslt-dev libxml2-dev libvirt-dev zlib1g-dev
+vagrant plugin install vagrant-libvirt
+vagrant plugin install vagrant-mutate
+vagrant plugin install vagrant-vyos
+
+vagrant up --provider=libvirt
+
+IP:
+vyos-test: 192.168.122.223/24
+vyos-test2: 192.168.122.100
+vyos-test3: 192.168.0.1
+
+
+
+
 
