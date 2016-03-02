@@ -1,0 +1,56 @@
+firewall {
+    name OUTSIDE-IN {
+        default-action drop
+        rule 10 {
+            action accept
+            state {
+                established enable
+                related enable
+            }
+        }
+    }
+    name OUTSIDE-LOCAL {
+        default-action drop
+        rule 10 {
+            action accept
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 20 {
+            action accept
+            icmp {
+                type-name echo-request
+            }
+            protocol icmp
+            state {
+                new enable
+            }
+        }
+        rule 30 {
+            action drop
+            destination {
+                port 22
+            }
+            protocol tcp
+            recent {
+                count 4
+                time 60
+            }
+            state {
+                new enable
+            }
+        }
+        rule 31 {
+            action accept
+            destination {
+                port 22
+            }
+            protocol tcp
+            state {
+                new enable
+            }
+        }
+    }
+}

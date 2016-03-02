@@ -68,7 +68,22 @@ vyos-test: 192.168.122.223/24
 vyos-test2: 192.168.122.100
 vyos-test3: 192.168.0.1
 
+qemu-img create -f qcow2 /home/vHost/vyos-snapshot-test.qcow2 2G
 
+virt-install \
+--name vyos \
+--ram 512 \
+--disk path=/home/vHost/vyos-snapshot.qcow2,size=2,device=disk,bus=virtio,format=qcow2 \
+--vcpus 1 \
+--os-type linux \
+--os-variant generic \
+--graphics none \
+--console pty,target_type=serial \
+--accelerate
+--import
 
-
-
+virt-install --connect qemu:///system --ram 512 \
+-n vyos-snapshot -r 2048 --os-type=linux --os-variant=generic \
+--disk path=/home/vHost/vyos-snapshot.qcow2,device=disk,bus=virtio,format=qcow2 \
+--vcpus=2 --console pty,target_type=serial --noautoconsole --import \
+--graphics none \
