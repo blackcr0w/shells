@@ -18,11 +18,11 @@ qemu-img create -f qcow2 /home/vHost/vyos.qcow2 4G
 wget http://mirror.tuxhelp.org/vyos/iso/release/1.1.7/vyos-1.1.7-amd64.iso
 
 # may need this:  virsh net-autostart default
-
+qemu-img create -f qcow2 /home/vHost/vyos-test5.qcow2 2G
 virt-install \
---name vyos \
+--name vyos-test5 \
 --ram 1024 \
---disk path=/home/vHost/vyos.qcow2,size=4 \
+--disk path=/home/vHost/vyos-test5.qcow2,size=4 \
 --vcpus 1 \
 --os-type linux \
 --os-variant generic \
@@ -68,12 +68,11 @@ vyos-test: 192.168.122.223/24
 vyos-test2: 192.168.122.100
 vyos-test3: 192.168.0.1
 
-qemu-img create -f qcow2 /home/vHost/vyos-snapshot-test.qcow2 2G
 
 virt-install \
 --name vyos \
 --ram 512 \
---disk path=/home/vHost/vyos-snapshot.qcow2,size=2,device=disk,bus=virtio,format=qcow2 \
+--disk path=/home/vHost/vyos-test5.qcow2,size=2,device=disk,bus=virtio,format=qcow2 \
 --vcpus 1 \
 --os-type linux \
 --os-variant generic \
@@ -87,3 +86,11 @@ virt-install --connect qemu:///system --ram 512 \
 --disk path=/home/vHost/vyos-snapshot.qcow2,device=disk,bus=virtio,format=qcow2 \
 --vcpus=2 --console pty,target_type=serial --noautoconsole --import \
 --graphics none \
+
+
+
+virt-install --connect qemu:///system --ram 512 \
+-n vyos-snapshot -r 2048 --os-type=linux --os-variant=generic \
+--disk path=/home/vHost/vyos-snapshot.qcow2,device=disk,bus=virtio,format=qcow2 \
+--vcpus=2 --console pty,target_type=serial --noautoconsole --import \
+--graphics none
