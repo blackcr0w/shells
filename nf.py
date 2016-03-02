@@ -12,19 +12,28 @@ def ccall (cmd):
     print "Executing", args
     raise
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--fw", help="Boot n firewall with default config.")
-parser.add_argument("--nat", help="Boot n NAT with default config.")
-parser.add_argument("--vpn", help="Boot n VPN with default config.")
-args = parser.parse_args()
+parser = argparse.ArgumentParser(description='NF boot up')
+parser.add_argument('-s', '--server_id', help='Give a server ID, e.g., c8.',
+                    type=str, action='store', required=True, default='c8')
+parser.add_argument('-n', '--nf', help='Give a type of NF, e.g., fw, nat, vpn',
+                    type=str, action="store", required=True, default='vpn')
+parser.add_argument('-c', '--config', help='Configures of NF. For long configs, quote in \' \' .',
+                    type=str, action="store", required=False, default=None)
 
-if args.fw:
-	for _ in range(arg.fw):
-		ccall("sudo virsh start vyos-test4")
-	ccall("sudo virsh list --all")
-	ccall("sudo /bin/bash /home/jack/shells/nf-test.sh")
-if args.nat:
-	for _ in range(arg.nat):
-		ccall("sudo virsh start vyos")
-	ccall("sudo virsh list --all")
-	ccall("sudo /bin/bash /home/jack/shells/nf-test.sh")
+args = parser.parse_args()
+# print args.server_id
+# print args.nf
+# print args.config
+
+server_id = args.server_id
+nf = args.nf
+config = args.config
+
+server_cmd = 'ssh root@' + server_id + '.millennium.berkeley.edu' + host_cmd
+host_cmd = 'sudo python nf-host.py ' + config
+
+ccall(server_cmd)
+
+if __name__ == '__main__':
+	ccall(host_cmd)
+
