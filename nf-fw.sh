@@ -53,7 +53,22 @@ set firewall name OUTSIDE-LOCAL rule 31 destination port '22'
 set firewall name OUTSIDE-LOCAL rule 31 protocol 'tcp'
 set firewall name OUTSIDE-LOCAL rule 31 state new 'enable'
 
+set firewall name OUTSIDE-LOCAL rule 200 action 'drop'
+set firewall name OUTSIDE-LOCAL rule 200 destination port '25001-26000'
+set firewall name OUTSIDE-LOCAL rule 200 protocol 'tcp'
+set firewall name OUTSIDE-LOCAL rule 200 recent count '4'
+set firewall name OUTSIDE-LOCAL rule 200 recent time '60'
+set firewall name OUTSIDE-LOCAL rule 200 state new 'enable'
+
+set firewall name OUTSIDE-LOCAL rule 201 action 'accept'
+set firewall name OUTSIDE-LOCAL rule 201 destination port '25001-26000'
+set firewall name OUTSIDE-LOCAL rule 201 protocol 'tcp'
+set firewall name OUTSIDE-LOCAL rule 201 state new 'enable'
 commit 
+
+set interfaces ethernet eth0 firewall in name 'OUTSIDE-IN'
+set interfaces ethernet eth0 firewall local name 'OUTSIDE-LOCAL'
+commit
 
 interfaces ethernet eth1 duplex auto
 commit

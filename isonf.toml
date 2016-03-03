@@ -1,0 +1,12 @@
+name = "isonf"
+description = "A simple nf which just sends packets from one vport to another"
+
+[author]
+name = "Aurojit Panda"
+
+[runtime]
+vport_count = 2
+vport_type = "ZeroCopyVPort"
+launch_cmd = "sudo $PWD/../scripts/isonf.bash start %VPORT0% %VPORT1% %CORE% %HANDLE%"
+kill_cmd = "sudo $PWD/../scripts/isonf.bash stop %HANDLE%"
+perf_cmd = ""

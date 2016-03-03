@@ -8,7 +8,7 @@ def ccall (cmd):
   try:
   	cmd = cmd.split()
   	subprocess.check_call(cmd)
-  except:
+  except: 
     print "Executing", args
     raise
 
