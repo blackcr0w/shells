@@ -32,6 +32,7 @@ def main():
 				f.write('set firewall name OUTSIDE-LOCAL rule ' + str(rule) + ' action \'drop\' \n')
 				f.write('set firewall name OUTSIDE-LOCAL rule ' + str(rule) + ' destination port \'' + str(port) + '\' \n')
 				f.write('set firewall name OUTSIDE-LOCAL rule ' + str(rule) + ' protocol \'tcp\'\n')
+		f.write('commit\nsave\nexit\n')
 		print 'Generated ' + str(args.count) + 'firewall policies: dropping packets of port number: 25000 - ' + str(base)
 	# f.closed
 	

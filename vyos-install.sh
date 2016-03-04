@@ -90,7 +90,53 @@ virt-install --connect qemu:///system --ram 512 \
 
 
 virt-install --connect qemu:///system --ram 512 \
--n vyos-snapshot -r 2048 --os-type=linux --os-variant=generic \
---disk path=/home/vHost/vyos-snapshot.qcow2,device=disk,bus=virtio,format=qcow2 \
+-n vyos-snapshot2 -r 2048 --os-type=linux --os-variant=generic \
+--disk path=/home/vHost/vyos-test4.qcow2,device=disk,bus=virtio,format=qcow2 \
+--vcpus=2 --console pty,target_type=serial --noautoconsole --import \
+--graphics none
+
+qemu-img create -f qcow2 /home/vHost/vyos-nat.qcow2 2G
+virt-install \
+--name vyos-nat \
+--ram 512 \
+--disk path=/home/vHost/vyos-nat.qcow2,size=2 \
+--vcpus 1 \
+--os-type linux \
+--os-variant generic \
+--graphics none \
+--console pty,target_type=serial \
+--cdrom ./vyos-1.1.7-amd64.iso \
+--accelerate
+
+qemu-img create -f qcow2 -o backing_file=/home/vHost/vyos-test4.qcow2 /home/jack/vyos-test-new.qcow2 2G
+
+VM_BASE_IMAGE="/home/vHost/vyos-test4.qcow2"	# this is a folder mounted to every server?
+VM_INSTANCE="/home/jack/vyos-test-new"
+
+virt-install --connect qemu:///system --ram 512 \
+--name $VM_INSTANCE \
+--disk path=/home/jack/vyos-test-new.qcow2,size=2 \
+--vcpus 1 \
+--os-type linux \
+--os-variant generic \
+--graphics none \
+--console pty,target_type=serial \
+--accelerate
+
+virt-install \
+--name vyos-test4-new \
+--ram 1024 \
+--disk path=/home/vHost//home/jack/vyos-test-new,size=4 \
+--vcpus 1 \
+--os-type linux \
+--os-variant generic \
+--graphics none \
+--console pty,target_type=serial \
+--cdrom ./vyos-1.1.7-amd64.iso \
+--accelerate
+
+virt-install --connect qemu:///system --ram 512 \
+-n vvv -r 1024 --os-type=linux --os-variant=generic \
+--disk path=vyos-test-new.qcow2,device=disk,bus=virtio,format=qcow2 \
 --vcpus=2 --console pty,target_type=serial --noautoconsole --import \
 --graphics none

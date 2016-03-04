@@ -1,0 +1,12 @@
+name = "fw-libvirt"
+description = "A VyOS-based firewall NF, launched with libvirt interface."
+
+[author]
+name = "Mingjie Zhao"
+
+[runtime]
+vport_count = 2
+vport_type = "vhost_user"
+launch_cmd = "sudo $PWD/../scripts/fw-libvirt.bash start %VPORT0% %VPORT1%"
+kill_cmd = "sudo $PWD/../scripts/fw-libvirt.bash stop %VPORT0% %VPORT1%"
+perf_cmd = ""
