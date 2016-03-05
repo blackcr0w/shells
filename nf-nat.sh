@@ -43,3 +43,7 @@ save
 exit
 
 # run show configuration
+set firewall name OUTSIDE-LOCAL rule 112 action 'accept'
+set firewall name OUTSIDE-LOCAL rule 112 destination port '200'
+set firewall name OUTSIDE-LOCAL rule 112 protocol 'tcp'
+set firewall name OUTSIDE-LOCAL rule 112 state new 'enable'
