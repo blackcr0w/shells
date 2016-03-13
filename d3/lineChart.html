@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="./nv.d3.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    <script src="./nv.d3.js"></script>
+
+    <style>
+        text {
+            font: 12px sans-serif;
+        }
+        svg {
+            display: block;
+        }
+        html, body, #chart1, svg {
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+            width: 100%;
+        }
+
+        .dashed {
+            stroke-dasharray: 5,5;
+        }
+    </style>
+</head>
+<body class='with-3d-shadow with-transitions'>
+<div style="position:absolute; top: 0; left: 0;">
+    <button onclick="randomizeFillOpacity();">Randomize fill opacity</button>
+    <button onclick="expandLegend();">Expand/Contract Legend</button>
+    <script>
+        var expandLegend = function() {
+            var exp = chart.legend.expanded();
+            chart.legend.expanded(!exp);
+            chart.update();
+        }
+    </script>
+</div>
+<div id="chart1"></div>
+
+<script>
+/* README:
+ * Put lineChart.html, nv.d3.js, nv.d3.css in the same directory.
+ * Change 'url' in function: readJson to the path that .json file updates.
+ */ 
+    // Wrapping in nv.addGraph allows for '0 timeout render', stores rendered charts in nv.graphs, and may do more in the future... it's NOT required
+
+    // nvd3 drawing:
+    var chart;
+    var data;
+    var counter = 0;
+    var wave0 = [], wave1 = [];
+    var boundary0 = [], boundary1 = [];
+
+
+    var randomizeFillOpacity = function() {
+        var rand = Math.random(0,1);
+        for (var i = 0; i < 100; i++) { // modify sine amplitude
+            data[4].values[i].y = Math.sin(i/(5 + rand)) * .4 * rand - .25;
+        }
+        data[4].fillOpacity = rand;
+        chart.update();
+    };
+
+    nv.addGraph(function() {
+        chart = nv.models.lineChart()
+            .options({
+                transitionDuration: 300,
+                useInteractiveGuideline: true
+            })
+        ;
+
+        // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
+        chart.xAxis
+            .axisLabel("Time (s)")
+            .tickFormat(d3.format(',.1f'))
+            .staggerLabels(true)
+        ;
+
+        chart.yAxis
+            .axisLabel('Voltage (v)')
+            .tickFormat(function(d) {
+                if (d == null) {
+                    return 'N/A';
+                }
+                return d3.format(',.2f')(d);
+            })
+        ;
+
+        data = initGraph();
+
+        d3.select('#chart1').append('svg')
+            .datum(data)
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+        return chart;
+    });
+
+    setInterval(function() {
+      updateData();
+    }, 1000);
+
+    function updateData() {
+      data = squareImpulse();
+
+      // d3.select('#chart1').append('svg')
+      //   .datum(data)
+      //   .call(chart);
+      var svg = d3.select("#chart1").selectAll("svg")
+        .datum(data)
+        .call(chart);      
+       nv.utils.windowResize(chart.update);
+      return chart;        
+    }
+
+    function initGraph() {
+      var sin = [],sin2 = [],
+          cos = [];
+      wave0.push({x: counter, y: 0});
+      wave1.push({x: counter, y: 0});
+      boundary0.push({x: counter, y: 0});
+      boundary1.push({x: counter, y: 0.5});
+      counter++;
+      //Data is represented as an array of {x,y} pairs.
+
+      //Line chart data should be sent as an array of series objects.
+      return [
+        {
+          values: wave0,      //values - represents the array of {x,y} data points
+          key: 'instance 0 rx rate', //key  - the name of the series.
+          color: '#ff7f0e'  //color - optional: choose your own line color.
+        },
+        {
+          values: wave1,      //values - represents the array of {x,y} data points
+          key: 'instance 1 rx rate', //key  - the name of the series.
+          color: '#2ca02c'  //color - optional: choose your own line color.
+        },
+        {
+          values: boundary0,      //values - represents the array of {x,y} data points
+          key: '', //key  - the name of the series.
+          color: '#ff7f0e'  //color - optional: choose your own line color.
+        },
+        {
+          values: boundary1,      //values - represents the array of {x,y} data points
+          key: '', //key  - the name of the series.
+          color: '#2ca02c'  //color - optional: choose your own line color.
+        }
+      ];
+    }
+
+    function squareImpulse() {
+
+      var rxs = readJson();
+      // alert(instances);
+      var rx_0 = rxs[0];
+      var rx_1 = rxs[1];
+      // alert(rx_0);
+
+      // alert('wowo2')
+
+      //Data is represented as an array of {x,y} pairs.
+        // for (var i = 0; i < 100; i++) { // modify sine amplitude
+        //     data[4].values[i].y = Math.sin(i/(5 + rand)) * .4 * rand - .25;
+        // }      
+      wave0.push({x: counter, y: rx_0});
+      wave1.push({x: counter, y: rx_1});
+      boundary0.push({x: counter, y: 0});
+      boundary1.push({x: counter, y: 0.5});      
+      counter++;
+
+      //Line chart data should be sent as an array of series objects.
+      return [
+        {
+          values: wave0,      //values - represents the array of {x,y} data points
+          key: 'instance 0 rx rate', //key  - the name of the series.
+          color: '#ff7f0e'  //color - optional: choose your own line color.
+        },
+        {
+          values: wave1,      //values - represents the array of {x,y} data points
+          key: 'instance 1 rx rate', //key  - the name of the series.
+          color: '#2ca02c'  //color - optional: choose your own line color.
+        },
+        {
+          values: boundary0,      //values - represents the array of {x,y} data points
+          key: '', //key  - the name of the series.
+          color: '#ff7f0e'  //color - optional: choose your own line color.
+        },
+        {
+          values: boundary1,      //values - represents the array of {x,y} data points
+          key: '', //key  - the name of the series.
+          color: '#2ca02c'  //color - optional: choose your own line color.
+        }
+      ];
+    }    
+    // function functABC(){
+    //     $.ajax({
+    //         url: 'http://localhost:8888/code/front/d3/e2/test.json',
+    //         data: {id: 'aa'},
+    //         success: function(data) {
+    //             alert(data);
+    //             return data;
+    //         }
+    //     });
+    // }
+
+    function readJson () {   
+        // alert('wowo3');
+        var url = 'http://localhost:8888/code/front/server.json'
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            // alert(xhr.readyState);
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                var myArr = xhr.responseText;
+                // alert(myArr);
+                var user = JSON.parse(myArr);
+                // alert(user.username);
+                var rx = [];
+                rx[0] = user[0].instances[0].incoming_rate;
+                rx[1] = user[0].instances[1].incoming_rate;
+                // alert(rx);
+                return rx;
+            }
+        }
+        // var myArr = xhr.responseText;
+        // alert(myArr);
+        // var user = JSON.parse(myArr);
+        // alert(user.username);        
+        xhr.open('GET', url, false);
+        xhr.send(null);
+        // alert('wowo');
+        return xhr.onreadystatechange();
+                
+        // alert(a)
+        // xhr.onreadystatechange = function() {
+        //     if (xhr.readyState == XMLHttpRequest.DONE) {
+        //         var myArr = xhr.responseText;
+        //         alert(myArr);
+        //         var user = JSON.parse(myArr);
+        //         var retVal = user.username;
+        //         alert(retVal);
+        //         return retVal;
+        //     }
+        // }
+        // var myArr = xhr.responseText;
+        // alert(myArr);
+        // var user = JSON.parse(myArr);
+        // var retVal = user.username;
+        // alert(retVal);
+        // return retVal;
+        // return ('fuck3')
+        // return retVal;
+        // var myArr = xhr.responseText;
+        // var user = JSON.parse(myArr)
+        // xhr.onreadystatechange = checkData;
+        // var myArr = xhr.responseText;
+        // alert(myArr);
+        // xhr.open('GET', 'http://localhost:8888/code/front/d3/e2/test.json', true);
+        // xhr.send(null);
+        // return myArr;
+
+    }
+    // function checkData()
+    // {
+    //     alert(xhr.readyState);
+    // }
+</script>
+</body>
+</html>
